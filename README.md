@@ -9,3 +9,15 @@ This repository contains hls-plugion for Esup-Pod.
 - `video-p2p-stats` [ptitloup/Esup-Pod/feature_video_p2p](https://github.com/ptitloup/Esup-Pod/tree/ptitloup/feature_video_p2p)
 
 ## Tests
+
+## Sur Chrome
+
+Ça fonctionne un fois sur trois. Quand ça fonctionne, ça télécharge un seul segment.
+
+## Sur Edge
+
+Ça ne fonctionne pas du tout. Aucune erreur n'est présente en console.
+
+## Sur Firefox
+
+Ça ne fonctionne pas du tout. Aucune erreur n'est présente en console.

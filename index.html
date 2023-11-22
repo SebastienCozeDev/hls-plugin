@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<!--
+    Copyright 2018 Novage LLC.
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+-->
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+
+    <title>Video.js player with hls.js engine and P2P demo</title>
+    <!--
+    <script src="https://cdn.jsdelivr.net/npm/p2p-media-loader-core@latest/build/p2p-media-loader-core.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/p2p-media-loader-hlsjs@latest/build/p2p-media-loader-hlsjs.min.js"></script>
+    -->
+    <!-- Version 1.0.15 P2P Media Loader - PeerTube Fork -->
+    <script src="./js/v1/p2p-media-loader-core.umd.js"></script>
+    <script src="./js/v1/p2p-media-loader-hlsjs.umd.js"></script>
+
+    <!--
+    <link href="http://vjs.zencdn.net/7.6.0/video-js.css" rel="stylesheet" />
+    <script src="http://vjs.zencdn.net/7.6.0/video.js"></script>
+    -->
+
+    <link href="/static/video.js/dist/video-js.min.css" rel="stylesheet">
+    <script id="videojs_script_id" src="/static/video.js/dist/video.min.js?ver=3.4.0"></script>
+
+    <script src="https://cdn.streamroot.io/videojs-hlsjs-plugin/1/stable/videojs-hlsjs-plugin.js"></script>
+
+    <script>
+        var downloadTotals = { http: 0, p2p: 0 };
+        var uploadTotal = 0;
+        var nb_peers = 0;
+    </script>
+
+    <script src="/static/js/video-p2p-stats.js"></script>
+
+    <style>
+        #video {
+        width: 360px;
+        height: 250px;
+        margin-left: auto;
+        margin-right: auto;
+        display: block;
+        }
+    </style>
+</head>
+<body>
+    <video id="video" class="video-js vjs-default-skin" controls autoplay muted></video>
+
+    <div class="d-flex justify-content-end">
+        <span id="p2p-stat-peers" data-bs-toggle="tooltip" data-bs-title="">
+        <i class="bi bi-people-fill" aria-hidden="true"></i> 0
+        </span>&nbsp;|&nbsp;
+        <span id="p2p-stat-info">
+        <span id="p2p-stat-info-download" data-bs-toggle="tooltip" data-bs-title="">&nbsp;</span>
+        &nbsp;-&nbsp;
+        <span id="p2p-stat-info-upload" data-bs-toggle="tooltip" data-bs-title="">&nbsp;</span>
+        </span>
+    </div>
+
+    <script type="module">
+        import './js/v1/p2p-media-loader-core.umd.js';
+        import './js/v1/p2p-media-loader-hlsjs.umd.js';
+        import '/static/video.js/dist/video.min.js';
+        import 'https://cdn.streamroot.io/videojs-hlsjs-plugin/1/stable/videojs-hlsjs-plugin.js';
+
+        // console.log(p2pml.hlsjs.Engine.isSupported());
+        var engine = new p2pml.hlsjs.Engine();
+        console.log(engine);
+
+        if (/*p2pml.hlsjs.Engine.isSupported()*/true) {
+            var engine = new p2pml.hlsjs.Engine();
+
+            engine.on("peer_connect", peer => console.log("peer_connect", peer.id, peer.remoteAddress));
+            engine.on("peer_close", peerId => console.log("peer_close", peerId));
+            engine.on("segment_loaded", (segment, peerId) => console.log("segment_loaded from", peerId ? `peer ${peerId}` : "HTTP", segment.url));
+
+            engine.on(p2pml.core.Events.PeerConnect, onPeerConnect.bind(this));
+            engine.on(p2pml.core.Events.PeerClose, onPeerClose.bind(this));
+            engine.on(p2pml.core.Events.PieceBytesDownloaded, onBytesDownloaded.bind(this));
+            engine.on(p2pml.core.Events.PieceBytesUploaded, onBytesUploaded.bind(this));
+
+            p2pml.hlsjs.initVideoJsHlsJsPlugin();
+
+            var player = videojs("video", {
+                html5: {
+                    vhs: {
+                        overrideNative: false,
+                    },
+                hlsjsConfig: {
+                    liveSyncDurationCount: 10, // To have at least 7 segments in queue
+                    loader: engine.createLoaderClass(),
+                },
+            },
+        });
+        player.src({
+            src: "https://fcc3ddae59ed.us-west-2.playback.live-video.net/api/video/v1/us-west-2.893648527354.channel.DmumNckWFTqz.m3u8",
+            type: "application/x-mpegURL",
+        });
+        } else {
+            document.write("Not supported :(");
+        }
+    </script>
+</body>
+</html>

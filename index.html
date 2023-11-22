@@ -68,19 +68,26 @@
         </span>
     </div>
 
-    <script type="module">
-        import './js/p2p-media-loader-core.js';
-        import './js/p2p-media-loader-hlsjs.js';
+    <script>
+        const p2p_config = {
+            segments:{
+                swarmId: 'https://fcc3ddae59ed.us-west-2.playback.live-video.net/api/video/v1/us-west-2.893648527354.channel.DmumNckWFTqz.m3u8',
+            },
+            loader:{
+                trackerAnnounce: [
+                    "wss://tracker.webtorrent.dev"
+                ],
+                rtcConfig: {
+                    iceServers: [
+                        "stun:stun.l.google.com:19302",
+                        "stun:global.stun.twilio.com:3478"
+                    ]
+                },
+            }
+        };
 
-        import '/static/video.js/dist/video.min.js';
-        import 'https://cdn.streamroot.io/videojs-hlsjs-plugin/1/stable/videojs-hlsjs-plugin.js';
-
-        // console.log(p2pml.hlsjs.Engine.isSupported());
-        var engine = new p2pml.hlsjs.Engine();
-        console.log(engine);
-
-        if (/*p2pml.hlsjs.Engine.isSupported()*/true) {
-            var engine = new p2pml.hlsjs.Engine();
+        if (p2pml.hlsjs.Engine.isSupported()) {
+            var engine = new p2pml.hlsjs.Engine(p2p_config);
 
             engine.on("peer_connect", peer => console.log("peer_connect", peer.id, peer.remoteAddress));
             engine.on("peer_close", peerId => console.log("peer_close", peerId));

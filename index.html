@@ -66,7 +66,7 @@
         var engine = new p2pml.hlsjs.Engine();
         console.log(engine);
 
-        if (/*p2pml.hlsjs.Engine.isSupported()*/true) {
+        if (p2pml.hlsjs.Engine.isSupported()) {
             var engine = new p2pml.hlsjs.Engine();
 
             engine.on("peer_connect", peer => console.log("peer_connect", peer.id, peer.remoteAddress));

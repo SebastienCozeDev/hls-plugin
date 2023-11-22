@@ -19,23 +19,19 @@
     <meta charset="UTF-8" />
 
     <title>Video.js player with hls.js engine and P2P demo</title>
-    <!--
-    <script src="https://cdn.jsdelivr.net/npm/p2p-media-loader-core@latest/build/p2p-media-loader-core.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/p2p-media-loader-hlsjs@latest/build/p2p-media-loader-hlsjs.min.js"></script>
-    -->
+
     <!-- Version 1.0.15 P2P Media Loader - PeerTube Fork -->
+    <!--
     <script src="./js/v1/p2p-media-loader-core.umd.js"></script>
     <script src="./js/v1/p2p-media-loader-hlsjs.umd.js"></script>
-
-    <!--
-    <link href="http://vjs.zencdn.net/7.6.0/video-js.css" rel="stylesheet" />
-    <script src="http://vjs.zencdn.net/7.6.0/video.js"></script>
     -->
 
     <link href="/static/video.js/dist/video-js.min.css" rel="stylesheet">
     <script id="videojs_script_id" src="/static/video.js/dist/video.min.js?ver=3.4.0"></script>
 
     <script src="https://cdn.streamroot.io/videojs-hlsjs-plugin/1/stable/videojs-hlsjs-plugin.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@1.1.5"></script>
 
     <script>
         var downloadTotals = { http: 0, p2p: 0 };
@@ -70,8 +66,7 @@
     </div>
 
     <script type="module">
-        import './js/v1/p2p-media-loader-core.umd.js';
-        import './js/v1/p2p-media-loader-hlsjs.umd.js';
+
         import '/static/video.js/dist/video.min.js';
         import 'https://cdn.streamroot.io/videojs-hlsjs-plugin/1/stable/videojs-hlsjs-plugin.js';
 
